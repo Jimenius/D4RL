@@ -137,6 +137,12 @@ class KitchenV0(robot_env.RobotEnv):
         self.goal = self._get_task_goal()  #sample a new goal on reset
         return self._get_obs()
 
+    def set_state(self, qpos, qvel):
+        assert qpos.shape == (self.model.nq,) and qvel.shape == (self.model.nv,)
+        state = np.concatenate([qpos, qvel])
+        self.sim.set_state(state)
+        self.sim.forward()
+
     def evaluate_success(self, paths):
         # score
         mean_score_per_rollout = np.zeros(shape=len(paths))
